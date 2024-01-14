@@ -1,0 +1,30 @@
+﻿<Application
+    x:Class="NZ.RdpMaid.App.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:eventModels="clr-namespace:NZ.RdpMaid.App.EventModel"
+    xmlns:uiServices="clr-namespace:NZ.RdpMaid.App.UiServices"
+    Startup="Application_Startup"
+>
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary>
+                    <uiServices:PublishCommand x:Key="PublishCommand" />
+
+                    <!-- События для отправки через MVVM команды -->
+                    <eventModels:ConnectEventModel x:Key="EventModels.ConnectEventModel" />
+                    <eventModels:CopyPasswordEventModel x:Key="EventModels.CopyPasswordEventModel" />
+                    <eventModels:SetupPasswordEventModel x:Key="EventModels.SetupPasswordEventModel" />
+                    <eventModels:SetupPinCodeSourceEventModel x:Key="EventModels.SetupPinCodeSourceEventModel" />
+                    <eventModels:SavePasswordEventModel x:Key="EventModels.SavePasswordEventModel" />
+                    <eventModels:SavePinCodeSourceEventModel x:Key="EventModels.SavePinCodeSourceEventModel" />
+                    <eventModels:ToggleThemeEventModel x:Key="EventModels.ToggleThemeEventModel" />
+                    <eventModels:OpenSettingsDirectoryEventModel x:Key="EventModels.OpenSettingsDirectoryEventModel" />
+
+                </ResourceDictionary>
+                <ResourceDictionary Source="Resources/Themes/PinkLoli.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

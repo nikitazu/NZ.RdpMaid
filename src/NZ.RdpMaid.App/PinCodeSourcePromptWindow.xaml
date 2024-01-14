@@ -1,0 +1,92 @@
+﻿<Window
+    x:Class="NZ.RdpMaid.App.PinCodeSourcePromptWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Title="Сохранить источник пин-кодов"
+    Width="640"
+    Height="480"
+    WindowStartupLocation="CenterOwner"
+    ResizeMode="NoResize"
+    FocusManager.FocusedElement="{Binding ElementName=SourceTextBox}"
+>
+    <Grid Background="{StaticResource Theme.Brushes.Dialogs.Window.Background}">
+        <Grid.Resources>
+            <Style TargetType="{x:Type TextBlock}">
+                <Setter Property="Foreground" Value="{StaticResource Theme.Brushes.Dialogs.Text.Foreground}" />
+            </Style>
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <TextBlock
+            Grid.Row="1"
+            HorizontalAlignment="Center"
+            FontSize="18"
+            Text="Импорт из Google Authenticator"
+        />
+        <TextBox
+            Grid.Row="2"
+            HorizontalAlignment="Stretch"
+            Margin="16"
+            Padding="8"
+            FontSize="18"
+            FontFamily="Lucida Console"
+            Text="{Binding ImportText, UpdateSourceTrigger=PropertyChanged}"
+        />
+        <TextBlock
+            Grid.Row="3"
+            HorizontalAlignment="Center"
+            FontSize="18"
+            Text="{Binding ImportFeedback}"
+        />
+        <TextBlock
+            Grid.Row="4"
+            HorizontalAlignment="Center"
+            FontSize="18"
+            Text="Ручной ввод (кодировка BASE32)"
+        />
+        <TextBox
+            Name="SourceTextBox"
+            Grid.Row="5"
+            HorizontalAlignment="Stretch"
+            Margin="16"
+            Padding="8"
+            FontSize="18"
+            FontFamily="Lucida Console"
+            Text="{Binding Source, UpdateSourceTrigger=PropertyChanged}"
+        />
+        <StackPanel
+            Grid.Row="6"
+            Orientation="Horizontal"
+            HorizontalAlignment="Center"
+        >
+            <Button
+                Name="SaveButton"
+                Command="{StaticResource PublishCommand}"
+                CommandParameter="{StaticResource EventModels.SavePinCodeSourceEventModel}"
+                Click="SaveButton_Click"
+                Content="Сохранить"
+                IsDefault="True"
+                Background="{StaticResource Theme.Brushes.Dialogs.OkButton.Background}"
+                Foreground="{StaticResource Theme.Brushes.Dialogs.OkButton.Foreground}"
+                Style="{StaticResource Theme.Style.Button.Default}"
+            />
+            <Button
+                Content="Отмена"
+                Click="CancelButton_Click"
+                IsCancel="True"
+                Style="{StaticResource Theme.Style.Button.Dialog}"
+            />
+        </StackPanel>
+    </Grid>
+</Window>

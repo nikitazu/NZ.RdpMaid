@@ -1,0 +1,83 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+>
+    <!-- Общее -->
+    <SolidColorBrush x:Key="Theme.Brushes.TextBox.Default.Background" Color="White" />
+    <SolidColorBrush x:Key="Theme.Brushes.TextBox.Default.Foreground" Color="Black" />
+
+    <!-- Фоновая картинка -->
+    <VisualBrush x:Key="Theme.Brushes.BackgroundImage" Stretch="UniformToFill">
+        <VisualBrush.Visual>
+            <Grid>
+                <Grid.Background>
+                    <SolidColorBrush Color="#FFADD8E6" />
+                </Grid.Background>
+                <Image Source="pack://application:,,,/Resources/Images/PinkLoli-Background.jpg" />
+            </Grid>
+        </VisualBrush.Visual>
+    </VisualBrush>
+
+    <!-- Ошибка загрузки -->
+    <SolidColorBrush x:Key="Theme.Brushes.LoadError.Panel" Color="White" Opacity="0.7" />
+    <SolidColorBrush x:Key="Theme.Brushes.LoadError.Text" Color="Black" />
+    <SolidColorBrush x:Key="Theme.Brushes.LoadError.MainText" Color="Red" />
+
+    <!-- Ввод пин-кода и запуск -->
+    <SolidColorBrush x:Key="Theme.Brushes.InputPin.Panel" Color="Pink" Opacity="0.7" />
+    <SolidColorBrush x:Key="Theme.Brushes.InputPin.Text" Color="Black" />
+    <SolidColorBrush x:Key="Theme.Brushes.InputPin.ConnectButton.Background" Color="#F195A0" />
+    <SolidColorBrush x:Key="Theme.Brushes.InputPin.ConnectButton.Foreground" Color="Black" />
+
+    <!-- Кнопки внизу -->
+    <SolidColorBrush x:Key="Theme.Brushes.BottomButtons.Background" Color="WhiteSmoke" />
+    <SolidColorBrush x:Key="Theme.Brushes.BottomButtons.Foreground" Color="Black" />
+
+    <!-- Диалоги -->
+    <SolidColorBrush x:Key="Theme.Brushes.Dialogs.Window.Background" Color="White" />
+    <SolidColorBrush x:Key="Theme.Brushes.Dialogs.Text.Foreground" Color="Black" />
+    <SolidColorBrush x:Key="Theme.Brushes.Dialogs.OkButton.Background" Color="#F195A0" />
+    <SolidColorBrush x:Key="Theme.Brushes.Dialogs.OkButton.Foreground" Color="Black" />
+
+    <!-- Стили -->
+
+    <!-- Текстовое поле -->
+    <Style x:Key="Theme.Style.TextBox.Default" TargetType="{x:Type TextBox}">
+        <Setter Property="Background" Value="{StaticResource Theme.Brushes.TextBox.Default.Background}" />
+        <Setter Property="Foreground" Value="{StaticResource Theme.Brushes.TextBox.Default.Foreground}" />
+    </Style>
+
+    <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource Theme.Style.TextBox.Default}" />
+
+    <!-- Поле ввода пароля -->
+    <Style x:Key="Theme.Style.PasswordBox.Default" TargetType="{x:Type PasswordBox}">
+        <Setter Property="Background" Value="{StaticResource Theme.Brushes.TextBox.Default.Background}" />
+        <Setter Property="Foreground" Value="{StaticResource Theme.Brushes.TextBox.Default.Foreground}" />
+    </Style>
+
+    <Style TargetType="{x:Type PasswordBox}" BasedOn="{StaticResource Theme.Style.PasswordBox.Default}" />
+
+    <!-- Кнопка -->
+    <Style x:Key="Theme.Style.Button.Default" TargetType="{x:Type Button}">
+        <Setter Property="MinWidth" Value="80" />
+        <Setter Property="Margin" Value="4" />
+        <Setter Property="Padding" Value="16,4,16,4" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="Background" Value="{StaticResource Theme.Brushes.BottomButtons.Background}" />
+        <Setter Property="Foreground" Value="{StaticResource Theme.Brushes.BottomButtons.Foreground}" />
+    </Style>
+
+    <!-- Кнопка подключения -->
+    <Style x:Key="Theme.Style.Button.Connect" TargetType="{x:Type Button}">
+        <Setter Property="Background" Value="{StaticResource Theme.Brushes.InputPin.ConnectButton.Background}" />
+        <Setter Property="Foreground" Value="{StaticResource Theme.Brushes.InputPin.ConnectButton.Foreground}" />
+    </Style>
+
+    <!-- Нижняя кнопка -->
+    <Style x:Key="Theme.Style.Button.Bottom" TargetType="{x:Type Button}" BasedOn="{StaticResource Theme.Style.Button.Default}">
+    </Style>
+
+    <!-- Диалоговая кнопка -->
+    <Style x:Key="Theme.Style.Button.Dialog" TargetType="{x:Type Button}" BasedOn="{StaticResource Theme.Style.Button.Bottom}">
+    </Style>
+</ResourceDictionary>

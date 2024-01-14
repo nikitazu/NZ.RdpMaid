@@ -1,0 +1,144 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+>
+    <!-- Общее -->
+    <SolidColorBrush x:Key="Theme.Brushes.TextBox.Default.Background" Color="#2C2C2C" />
+    <SolidColorBrush x:Key="Theme.Brushes.TextBox.Default.Foreground" Color="Silver" />
+
+    <!-- Фоновая картинка -->
+    <VisualBrush x:Key="Theme.Brushes.BackgroundImage" Stretch="UniformToFill">
+        <VisualBrush.Visual>
+            <Grid>
+                <Grid.Background>
+                    <SolidColorBrush Color="#FFADD8E6" />
+                </Grid.Background>
+                <Image Source="pack://application:,,,/Resources/Images/NightMistress-Background.jpg" />
+            </Grid>
+        </VisualBrush.Visual>
+    </VisualBrush>
+
+    <!-- Ошибка загрузки -->
+    <SolidColorBrush x:Key="Theme.Brushes.LoadError.Panel" Color="White" Opacity="0.7" />
+    <SolidColorBrush x:Key="Theme.Brushes.LoadError.Text" Color="Black" />
+    <SolidColorBrush x:Key="Theme.Brushes.LoadError.MainText" Color="Red" />
+
+    <!-- Ввод пин-кода и запуск -->
+    <SolidColorBrush x:Key="Theme.Brushes.InputPin.Panel" Color="#121212" Opacity="0.9" />
+    <SolidColorBrush x:Key="Theme.Brushes.InputPin.Text" Color="Silver" />
+    <SolidColorBrush x:Key="Theme.Brushes.InputPin.ConnectButton.Border" Color="Transparent" />
+    <SolidColorBrush x:Key="Theme.Brushes.InputPin.ConnectButton.Background" Color="#3D3D3D" />
+    <SolidColorBrush x:Key="Theme.Brushes.InputPin.ConnectButton.Foreground" Color="#A87EA4" />
+    <SolidColorBrush x:Key="Theme.Brushes.InputPin.ConnectButton.ActiveBackground" Color="Black" />
+
+    <!-- Кнопки внизу -->
+    <SolidColorBrush x:Key="Theme.Brushes.BottomButtons.Border" Color="Transparent" />
+    <SolidColorBrush x:Key="Theme.Brushes.BottomButtons.Background" Color="#3D3D3D" />
+    <SolidColorBrush x:Key="Theme.Brushes.BottomButtons.Foreground" Color="Silver" />
+    <SolidColorBrush x:Key="Theme.Brushes.BottomButtons.ActiveBackground" Color="Black" />
+
+    <!-- Диалоги -->
+    <SolidColorBrush x:Key="Theme.Brushes.Dialogs.Window.Background" Color="#121212" />
+    <SolidColorBrush x:Key="Theme.Brushes.Dialogs.Text.Foreground" Color="Silver" />
+    <SolidColorBrush x:Key="Theme.Brushes.Dialogs.OkButton.Background" Color="#8E5E89" />
+    <SolidColorBrush x:Key="Theme.Brushes.Dialogs.OkButton.Foreground" Color="Black" />
+
+    <!-- Стили -->
+
+    <!-- Текстовое поле -->
+    <Style x:Key="Theme.Style.TextBox.Default" TargetType="{x:Type TextBox}">
+        <Setter Property="Background" Value="{StaticResource Theme.Brushes.TextBox.Default.Background}" />
+        <Setter Property="Foreground" Value="{StaticResource Theme.Brushes.TextBox.Default.Foreground}" />
+    </Style>
+
+    <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource Theme.Style.TextBox.Default}" />
+
+    <!-- Поле ввода пароля -->
+    <Style x:Key="Theme.Style.PasswordBox.Default" TargetType="{x:Type PasswordBox}">
+        <Setter Property="Background" Value="{StaticResource Theme.Brushes.TextBox.Default.Background}" />
+        <Setter Property="Foreground" Value="{StaticResource Theme.Brushes.TextBox.Default.Foreground}" />
+    </Style>
+
+    <Style TargetType="{x:Type PasswordBox}" BasedOn="{StaticResource Theme.Style.PasswordBox.Default}" />
+
+    <!-- Кнопка -->
+    <Style x:Key="Theme.Style.Button.Default" TargetType="{x:Type Button}">
+        <Setter Property="MinWidth" Value="80" />
+        <Setter Property="Margin" Value="4" />
+        <Setter Property="Padding" Value="16,4,16,4" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="Background" Value="{StaticResource Theme.Brushes.BottomButtons.Background}" />
+        <Setter Property="Foreground" Value="{StaticResource Theme.Brushes.BottomButtons.Foreground}" />
+    </Style>
+
+    <!-- Кнопка подключения -->
+    <Style x:Key="Theme.Style.Button.Connect" TargetType="{x:Type Button}">
+        <Setter Property="Background" Value="{StaticResource Theme.Brushes.InputPin.ConnectButton.Background}" />
+        <Setter Property="Foreground" Value="{StaticResource Theme.Brushes.InputPin.ConnectButton.Foreground}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border
+                        Background="{TemplateBinding Background}"
+                        Padding="{TemplateBinding Padding}"
+                        BorderBrush="{StaticResource Theme.Brushes.InputPin.ConnectButton.Border}"
+                        BorderThickness="1"
+                    >
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource Theme.Brushes.InputPin.ConnectButton.ActiveBackground}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Нижняя кнопка -->
+    <Style x:Key="Theme.Style.Button.Bottom" TargetType="{x:Type Button}" BasedOn="{StaticResource Theme.Style.Button.Default}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border
+                        Background="{TemplateBinding Background}"
+                        Padding="{TemplateBinding Padding}"
+                        BorderBrush="{StaticResource Theme.Brushes.BottomButtons.Border}"
+                        BorderThickness="1"
+                    >
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource Theme.Brushes.BottomButtons.ActiveBackground}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Диалоговая кнопка -->
+    <Style x:Key="Theme.Style.Button.Dialog" TargetType="{x:Type Button}" BasedOn="{StaticResource Theme.Style.Button.Bottom}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border
+                        Background="{TemplateBinding Background}"
+                        Padding="{TemplateBinding Padding}"
+                        BorderBrush="{StaticResource Theme.Brushes.BottomButtons.Border}"
+                        BorderThickness="1"
+                    >
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource Theme.Brushes.BottomButtons.ActiveBackground}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+</ResourceDictionary>
