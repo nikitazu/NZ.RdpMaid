@@ -144,6 +144,7 @@ namespace NZ.RdpMaid.App
         {
             _pub.Publish(SelfTestEventModel.Instance);
             _pub.Publish(InitPinCodeProviderEventModel.Instance);
+            _pub.Publish(InitDebouncingEventModel.Instance);
 
             var version = typeof(MainWindowViewModel).Assembly.GetName().Version;
             AppTitle = $"NZ.RdpMaid.App v{version}";
