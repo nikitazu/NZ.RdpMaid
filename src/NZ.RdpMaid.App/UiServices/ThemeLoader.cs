@@ -9,6 +9,7 @@ namespace NZ.RdpMaid.App.UiServices
     {
         private const string _defaultThemeName = "PinkLoli";
         private const string _darkThemeName = "NightMistress";
+        private const string _necoArcThemeName = "NecoArc";
         private string _currentThemeName = _defaultThemeName;
 
         public void LoadTheme()
@@ -33,7 +34,12 @@ namespace NZ.RdpMaid.App.UiServices
 
         public void ToggleTheme()
         {
-            var nextThemeName = _currentThemeName == _defaultThemeName ? _darkThemeName : _defaultThemeName;
+            var nextThemeName = _currentThemeName switch
+            {
+                _defaultThemeName => _darkThemeName,
+                _darkThemeName => _necoArcThemeName,
+                _ => _defaultThemeName,
+            };
 
             var currentTheme = FindThemeByName(_currentThemeName);
 
