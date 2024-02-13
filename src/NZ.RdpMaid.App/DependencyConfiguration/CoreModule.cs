@@ -6,6 +6,8 @@ namespace NZ.RdpMaid.App.DependencyConfiguration
     internal static class CoreModule
     {
         public static IServiceCollection AddCoreModule(this IServiceCollection services) => services
+            .AddSingleton<ClipboardWrapper>()
+            .AddSingleton<DebouncingTriggerService>()
             .AddSingleton<FileStorage>()
             .AddSingleton<PinCodeProvider>()
             .AddSingleton<PinCodeSourceImporter>()
