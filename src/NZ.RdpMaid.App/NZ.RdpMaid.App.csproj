@@ -38,6 +38,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\Images\NecoArc-Background.jpg" />
     <Resource Include="Resources\Images\NightMistress-Background.jpg" />
     <Resource Include="Resources\Images\PinkLoli-Background.jpg" />
   </ItemGroup>
