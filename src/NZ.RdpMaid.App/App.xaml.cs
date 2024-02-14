@@ -14,6 +14,7 @@ namespace NZ.RdpMaid.App
     public partial class App : Application
     {
         private static SingleInstanceProvider _appInstance = new();
+        private static NamedPipeChannel? _pipeChannel;
 
         internal IServiceProvider? ServiceProvider { get; private set; }
 
@@ -21,10 +22,16 @@ namespace NZ.RdpMaid.App
         {
             if (_appInstance.IsRunning)
             {
+                NamedPipeChannel.SendActivateMainWindowMessage();
                 Shutdown();
             }
             else
             {
+                _pipeChannel = new();
+                _pipeChannel.AddActivateMainWindowMessageHandler(
+                    () => Current.Dispatcher.BeginInvoke(() => Current.MainWindow.Activate())
+                );
+
                 // Иньекция
                 //
 
@@ -54,6 +61,9 @@ namespace NZ.RdpMaid.App
 
             _appInstance?.Dispose();
             _appInstance = null!;
+
+            _pipeChannel?.Dispose();
+            _pipeChannel = null!;
         }
     }
 }
