@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 
 namespace NZ.RdpMaid.App.UiServices
 {
@@ -15,7 +14,6 @@ namespace NZ.RdpMaid.App.UiServices
             Application.Current.MainWindow = window;
 
             window.Show();
-
             viewModel.OnLoadFinished();
         }
     }

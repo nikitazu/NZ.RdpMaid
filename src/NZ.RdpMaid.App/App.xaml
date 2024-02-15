@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:eventModels="clr-namespace:NZ.RdpMaid.App.EventModel"
+    xmlns:updateEventModels="clr-namespace:NZ.RdpMaid.App.EventModel.Updates"
     xmlns:uiServices="clr-namespace:NZ.RdpMaid.App.UiServices"
     Startup="Application_Startup"
 >
@@ -11,8 +12,10 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary>
                     <uiServices:PublishCommand x:Key="PublishCommand" />
+                    <uiServices:ToggleContextMenuCommand x:Key="ToggleContextMenuCommand" />
 
                     <!-- События для отправки через MVVM команды -->
+                    <updateEventModels:OpenUpdateDialogEventModel x:Key="EventModels.Updates.OpenUpdateDialogEventModel" />
                     <eventModels:ConnectEventModel x:Key="EventModels.ConnectEventModel" />
                     <eventModels:CopyPasswordEventModel x:Key="EventModels.CopyPasswordEventModel" />
                     <eventModels:SetupPasswordEventModel x:Key="EventModels.SetupPasswordEventModel" />

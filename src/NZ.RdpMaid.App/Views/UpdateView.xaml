@@ -1,0 +1,69 @@
+﻿<UserControl
+    x:Class="NZ.RdpMaid.App.Views.UpdateView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:NZ.RdpMaid.App.Views"
+    mc:Ignorable="d"
+    d:DesignWidth="800"
+    d:DesignHeight="450"
+    Padding="16"
+>
+    <UserControl.Resources>
+        <DataTemplate DataType="{x:Type local:UpdateViewModel}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,16">
+                    <TextBlock Text="Состояние " />
+                    <TextBlock Text="{Binding CurrentStatusText}" />
+                </StackPanel>
+                <Grid Grid.Row="1" Margin="0,0,0,16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="3*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Column="0" Grid.Row="0" Text="Текущая версия" />
+                    <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding CurrentVersion}" />
+                    <TextBlock Grid.Column="0" Grid.Row="1" Text="Новая версия" />
+                    <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding PendingUpdate.Version}" />
+                    <TextBlock Grid.Column="0" Grid.Row="2" Text="Дата выпуска" />
+                    <TextBlock Grid.Column="1" Grid.Row="2" Text="{Binding PendingUpdate.Updated}" />
+                    <TextBlock Grid.Column="0" Grid.Row="3" Text="Ссылка" />
+                    <TextBlock Grid.Column="1" Grid.Row="3">
+                        <Hyperlink NavigateUri="{Binding PendingUpdate.Link}">
+                            <TextBlock Text="{Binding PendingUpdate.Link}" />
+                        </Hyperlink>
+                    </TextBlock>
+                    <TextBlock Grid.Column="0" Grid.Row="4" Text="Автор" />
+                    <TextBlock Grid.Column="1" Grid.Row="4" Text="{Binding PendingUpdate.Author}" />
+                    <TextBlock Grid.Column="0" Grid.Row="5" Text="Описание" />
+                    <TextBlock Grid.Column="1" Grid.Row="5" Text="{Binding PendingUpdate.Content}" />
+                </Grid>
+                <ItemsControl Grid.Row="2" ItemsSource="{Binding Logs}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,4" >
+                                <TextBlock Text="{Binding Time}" FontFamily="Consolas" Margin="0,0,8,0" />
+                                <TextBlock Text="{Binding Message}" FontFamily="Consolas" Margin="0" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Grid>
+        </DataTemplate>
+    </UserControl.Resources>
+    <ContentPresenter Content="{Binding .}" />
+</UserControl>
