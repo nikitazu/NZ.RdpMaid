@@ -9,6 +9,7 @@ namespace NZ.RdpMaid.App.DependencyConfiguration
         public static IServiceCollection AddCoreModule(this IServiceCollection services) => services
             .AddHttpClientServices()
             .AddSingleton<AppVersionProvider>()
+            .AddSingleton<BrowserProvider>()
             .AddSingleton<ClipboardWrapper>()
             .AddSingleton<DebouncingTriggerService>()
             .AddSingleton<FileStorage>()

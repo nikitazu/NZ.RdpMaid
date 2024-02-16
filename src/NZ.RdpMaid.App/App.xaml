@@ -11,6 +11,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary>
+                    <uiServices:OpenLinkInBrowserCommand x:Key="OpenLinkInBrowserCommand" />
                     <uiServices:PublishCommand x:Key="PublishCommand" />
                     <uiServices:ToggleContextMenuCommand x:Key="ToggleContextMenuCommand" />
 

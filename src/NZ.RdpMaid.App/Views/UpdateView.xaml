@@ -43,7 +43,11 @@
                     <TextBlock Grid.Column="1" Grid.Row="2" Text="{Binding PendingUpdate.Updated}" />
                     <TextBlock Grid.Column="0" Grid.Row="3" Text="Ссылка" />
                     <TextBlock Grid.Column="1" Grid.Row="3">
-                        <Hyperlink NavigateUri="{Binding PendingUpdate.Link}">
+                        <Hyperlink
+                            NavigateUri="{Binding PendingUpdate.Link}"
+                            Command="{StaticResource OpenLinkInBrowserCommand}"
+                            CommandParameter="{Binding PendingUpdate.Link}"
+                        >
                             <TextBlock Text="{Binding PendingUpdate.Link}" />
                         </Hyperlink>
                     </TextBlock>
