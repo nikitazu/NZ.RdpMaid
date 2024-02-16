@@ -60,6 +60,7 @@
     <!-- Кнопка -->
     <Style x:Key="Theme.Style.Button.Default" TargetType="{x:Type Button}">
         <Setter Property="MinWidth" Value="80" />
+        <Setter Property="MaxHeight" Value="32" />
         <Setter Property="Margin" Value="4" />
         <Setter Property="Padding" Value="16,4,16,4" />
         <Setter Property="FontSize" Value="16" />
@@ -75,6 +76,17 @@
 
     <!-- Нижняя кнопка -->
     <Style x:Key="Theme.Style.Button.Bottom" TargetType="{x:Type Button}" BasedOn="{StaticResource Theme.Style.Button.Default}">
+    </Style>
+
+    <!-- Кнопка-иконка -->
+    <Style x:Key="Theme.Style.Button.Icon" TargetType="{x:Type Button}" BasedOn="{StaticResource Theme.Style.Button.Default}">
+        <Setter Property="MinWidth" Value="30" />
+        <Setter Property="Padding" Value="4" />
+        <Setter Property="Content">
+            <Setter.Value>
+                <Image Source="pack://application:,,,/Resources/Images/Icons/CogWheel-Default.png" />
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <!-- Диалоговая кнопка -->

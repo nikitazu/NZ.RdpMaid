@@ -175,17 +175,33 @@
                 <Button
                     Grid.Column="1"
                     Style="{DynamicResource Theme.Style.Button.Bottom}"
-                    Content="Настройки"
-                    Command="{StaticResource PublishCommand}"
-                    CommandParameter="{StaticResource EventModels.OpenSettingsDirectoryEventModel}"
-                />
-                <Button
-                    Grid.Column="2"
-                    Style="{DynamicResource Theme.Style.Button.Bottom}"
                     Content="Тема"
                     Command="{StaticResource PublishCommand}"
                     CommandParameter="{StaticResource EventModels.ToggleThemeEventModel}"
                 />
+                <Button
+                    Name="MenuButton"
+                    Grid.Column="2"
+                    Style="{DynamicResource Theme.Style.Button.Icon}"
+                    Command="{StaticResource ToggleContextMenuCommand}"
+                    CommandParameter="{Binding ElementName=MenuButton}"
+                >
+                    <Button.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Руководство пользователя (в разработке)" />
+                            <MenuItem
+                                Header="Проверить наличие обновлений (в разработке)"
+                                Command="{StaticResource PublishCommand}"
+                                CommandParameter="{StaticResource EventModels.Updates.OpenUpdateDialogEventModel}"
+                            />
+                            <MenuItem
+                                Header="Каталог настроек"
+                                Command="{StaticResource PublishCommand}"
+                                CommandParameter="{StaticResource EventModels.OpenSettingsDirectoryEventModel}"
+                            />
+                        </ContextMenu>
+                    </Button.ContextMenu>
+                </Button>
             </Grid>
         </Grid>
     </Grid>

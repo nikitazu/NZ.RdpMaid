@@ -3,11 +3,13 @@ using System.ComponentModel;
 using System.Threading;
 using System.Windows;
 using MediatR;
+using NZ.RdpMaid.App.Core.Services;
 using NZ.RdpMaid.App.EventModel;
 
 namespace NZ.RdpMaid.App
 {
-    internal class MainWindowViewModel : INotifyPropertyChanged
+    internal class MainWindowViewModel(IPublisher pub, AppVersionProvider appVersion)
+        : INotifyPropertyChanged
     {
         public enum LoadStatusKind
         {
@@ -34,7 +36,8 @@ namespace NZ.RdpMaid.App
         // Dependencies
         //
 
-        private readonly IPublisher _pub;
+        private readonly IPublisher _pub = pub ?? throw new ArgumentNullException(nameof(pub));
+        private readonly AppVersionProvider _appVersion = appVersion ?? throw new ArgumentNullException(nameof(appVersion));
 
         // Fields
         //
@@ -132,22 +135,13 @@ namespace NZ.RdpMaid.App
         public Visibility LoadErrorVisibility =>
             LoadStatus == LoadStatusKind.Error ? Visibility.Visible : Visibility.Collapsed;
 
-        // Init
-        //
-
-        public MainWindowViewModel(IPublisher pub)
-        {
-            _pub = pub ?? throw new ArgumentNullException(nameof(pub));
-        }
-
         public void OnLoadFinished()
         {
             _pub.Publish(SelfTestEventModel.Instance);
             _pub.Publish(InitPinCodeProviderEventModel.Instance);
             _pub.Publish(InitDebouncingEventModel.Instance);
 
-            var version = typeof(MainWindowViewModel).Assembly.GetName().Version;
-            AppTitle = $"NZ.RdpMaid.App v{version}";
+            AppTitle = $"NZ.RdpMaid.App v{_appVersion.Current}";
 
             // TODO test if generator is available
             _timer = new(OnTimerTick, this, 0, 1000);

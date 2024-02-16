@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using NZ.RdpMaid.App.UiServices;
+using NZ.RdpMaid.App.Views;
 
 namespace NZ.RdpMaid.App.DependencyConfiguration
 {
@@ -26,6 +27,7 @@ namespace NZ.RdpMaid.App.DependencyConfiguration
 
                 .AddSingleton<PasswordPromptWindowViewModel>()
                 .AddSingleton<PinCodeSourcePromptWindowViewModel>()
+                .AddSingleton<UpdateViewModel>()
                 .AddSingleton<MainWindowViewModel>();
         }
     }

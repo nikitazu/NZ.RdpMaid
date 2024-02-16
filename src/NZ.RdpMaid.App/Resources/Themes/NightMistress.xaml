@@ -64,6 +64,7 @@
     <!-- Кнопка -->
     <Style x:Key="Theme.Style.Button.Default" TargetType="{x:Type Button}">
         <Setter Property="MinWidth" Value="80" />
+        <Setter Property="MaxHeight" Value="32" />
         <Setter Property="Margin" Value="4" />
         <Setter Property="Padding" Value="16,4,16,4" />
         <Setter Property="FontSize" Value="16" />
@@ -98,6 +99,36 @@
 
     <!-- Нижняя кнопка -->
     <Style x:Key="Theme.Style.Button.Bottom" TargetType="{x:Type Button}" BasedOn="{StaticResource Theme.Style.Button.Default}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border
+                        Background="{TemplateBinding Background}"
+                        Padding="{TemplateBinding Padding}"
+                        BorderBrush="{StaticResource Theme.Brushes.BottomButtons.Border}"
+                        BorderThickness="1"
+                    >
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource Theme.Brushes.BottomButtons.ActiveBackground}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Кнопка-иконка -->
+    <Style x:Key="Theme.Style.Button.Icon" TargetType="{x:Type Button}" BasedOn="{StaticResource Theme.Style.Button.Default}">
+        <Setter Property="MinWidth" Value="30" />
+        <Setter Property="Padding" Value="4" />
+        <Setter Property="Content">
+            <Setter.Value>
+                <Image Source="pack://application:,,,/Resources/Images/Icons/CogWheel-Dark.png" />
+            </Setter.Value>
+        </Setter>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
