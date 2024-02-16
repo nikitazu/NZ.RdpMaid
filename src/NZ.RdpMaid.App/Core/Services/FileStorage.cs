@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using NZ.RdpMaid.App.Settings;
 
 namespace NZ.RdpMaid.App.Core.Services
@@ -34,6 +36,12 @@ namespace NZ.RdpMaid.App.Core.Services
         {
             var path = ResolveFilePath(name);
             File.WriteAllBytes(path, content);
+        }
+
+        public async Task CreateBinaryFileAsync(string name, byte[] content, CancellationToken ct = default)
+        {
+            var path = ResolveFilePath(name);
+            await File.WriteAllBytesAsync(path, content, ct);
         }
 
         public byte[] ReadBinaryFile(string name)

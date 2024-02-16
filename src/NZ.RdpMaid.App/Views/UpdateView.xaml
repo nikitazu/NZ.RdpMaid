@@ -17,6 +17,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,16">
                     <TextBlock Text="Состояние " />
@@ -66,6 +67,16 @@
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
+                <StackPanel Grid.Row="3" Visibility="{Binding DownloadSectionVisibility}">
+                    <Button
+                        Content="Скачать обновление"
+                        Style="{StaticResource Theme.Style.Button.Dialog}"
+                        MaxWidth="250"
+                        Command="{StaticResource PublishCommand}"
+                        CommandParameter="{StaticResource EventModels.Updates.DownloadUpdateEventModel}"
+                        IsEnabled="{Binding IsDownloadButtonEnabled}"
+                    />
+                </StackPanel>
             </Grid>
         </DataTemplate>
     </UserControl.Resources>
