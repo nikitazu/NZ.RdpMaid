@@ -1,4 +1,4 @@
-﻿#define GITHUB_UPDATE_TEST_MODE__ON
+﻿#define GITHUB_UPDATE_TEST_MODE__OFF
 
 using System;
 using System.Collections.Generic;
