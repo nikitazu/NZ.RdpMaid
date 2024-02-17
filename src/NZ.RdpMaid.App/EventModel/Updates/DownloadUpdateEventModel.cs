@@ -13,15 +13,13 @@ namespace NZ.RdpMaid.App.EventModel.Updates
     internal class DownloadUpdateEventConsumer(
         UpdateViewModel model,
         GithubUpdateClient updateClient,
-        FileStorage fileStorage,
-        ShellProvider shell
+        FileStorage fileStorage
     )
         : INotificationHandler<DownloadUpdateEventModel>
     {
         private readonly UpdateViewModel _model = model ?? throw new ArgumentNullException(nameof(model));
         private readonly GithubUpdateClient _updateClient = updateClient ?? throw new ArgumentNullException(nameof(updateClient));
         private readonly FileStorage _fileStorage = fileStorage ?? throw new ArgumentNullException(nameof(fileStorage));
-        private readonly ShellProvider _shell = shell ?? throw new ArgumentNullException(nameof(shell));
 
         private readonly Progress<float> _progress = new();
 
@@ -62,7 +60,6 @@ namespace NZ.RdpMaid.App.EventModel.Updates
             var path = _fileStorage.ResolveFilePath("update.zip");
 
             _model.AddLog($"Записал обновление на диск: {path}");
-            _shell.OpenFile(path);
             _model.CurrentStatus = UpdateViewModel.Status.WaitingForInstallOrder;
         }
     }
