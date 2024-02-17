@@ -10,23 +10,23 @@ namespace NZ.RdpMaid.App.UiServices
     {
         public event EventHandler? CanExecuteChanged;
 
-        private BrowserProvider? _browserProvider;
+        private ShellProvider? _shell;
 
         public bool CanExecute(object? parameter) => true;
 
         public void Execute(object? parameter)
         {
-            if (_browserProvider is null)
+            if (_shell is null)
             {
                 var serviceProvider = ((App)Application.Current).ServiceProvider
                     ?? throw new InvalidOperationException("Application service provider not initialized");
 
-                _browserProvider = serviceProvider.GetRequiredService<BrowserProvider>();
+                _shell = serviceProvider.GetRequiredService<ShellProvider>();
             }
 
             if (parameter is string url)
             {
-                _browserProvider.OpenUrl(url);
+                _shell.OpenUrl(url);
             }
         }
     }

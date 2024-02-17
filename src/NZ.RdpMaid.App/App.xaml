@@ -17,6 +17,7 @@
 
                     <!-- События для отправки через MVVM команды -->
                     <updateEventModels:OpenUpdateDialogEventModel x:Key="EventModels.Updates.OpenUpdateDialogEventModel" />
+                    <updateEventModels:DownloadUpdateEventModel x:Key="EventModels.Updates.DownloadUpdateEventModel" />
                     <eventModels:ConnectEventModel x:Key="EventModels.ConnectEventModel" />
                     <eventModels:CopyPasswordEventModel x:Key="EventModels.CopyPasswordEventModel" />
                     <eventModels:SetupPasswordEventModel x:Key="EventModels.SetupPasswordEventModel" />

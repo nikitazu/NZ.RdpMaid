@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Windows;
 using MediatR;
 using NZ.RdpMaid.App.Core.Services;
 using NZ.RdpMaid.App.Core.Services.HttpClients;
@@ -34,6 +35,9 @@ namespace NZ.RdpMaid.App.Views
             public static readonly PropertyChangedEventArgs CurrentStatus = new(nameof(CurrentStatus));
             public static readonly PropertyChangedEventArgs CurrentStatusText = new(nameof(CurrentStatusText));
             public static readonly PropertyChangedEventArgs PendingUpdate = new(nameof(PendingUpdate));
+            public static readonly PropertyChangedEventArgs DownloadSectionVisibility = new(nameof(DownloadSectionVisibility));
+            public static readonly PropertyChangedEventArgs IsDownloadButtonEnabled = new(nameof(IsDownloadButtonEnabled));
+            public static readonly PropertyChangedEventArgs DownloadProgressValue = new(nameof(DownloadProgressValue));
         }
 
         // Зависимости
@@ -47,6 +51,7 @@ namespace NZ.RdpMaid.App.Views
         private ObservableCollection<LogEntry> _logs = [];
         private Status _currentStatus = Status.None;
         private UpdateModel? _pendingUpdate = null;
+        private float _downloadProgressValue;
 
         // Свойства
         //
@@ -71,6 +76,8 @@ namespace NZ.RdpMaid.App.Views
                 _currentStatus = value;
                 PropertyChanged?.Invoke(this, PropArgs.CurrentStatus);
                 PropertyChanged?.Invoke(this, PropArgs.CurrentStatusText);
+                PropertyChanged?.Invoke(this, PropArgs.DownloadSectionVisibility);
+                PropertyChanged?.Invoke(this, PropArgs.IsDownloadButtonEnabled);
             }
         }
 
@@ -87,6 +94,15 @@ namespace NZ.RdpMaid.App.Views
             _ => "Неизвестное состояние " + CurrentStatus.ToString() ?? string.Empty,
         };
 
+        public Visibility DownloadSectionVisibility =>
+            CurrentStatus == Status.WaitingForDownloadOrder
+            || CurrentStatus == Status.Downloading
+            ? Visibility.Visible
+            : Visibility.Collapsed;
+
+        public bool IsDownloadButtonEnabled =>
+            CurrentStatus == Status.WaitingForDownloadOrder;
+
         public UpdateModel? PendingUpdate
         {
             get => _pendingUpdate;
@@ -94,6 +110,16 @@ namespace NZ.RdpMaid.App.Views
             {
                 _pendingUpdate = value;
                 PropertyChanged?.Invoke(this, PropArgs.PendingUpdate);
+            }
+        }
+
+        public float DownloadProgressValue
+        {
+            get => _downloadProgressValue;
+            set
+            {
+                _downloadProgressValue = value;
+                PropertyChanged?.Invoke(this, PropArgs.DownloadProgressValue);
             }
         }
 
@@ -108,6 +134,14 @@ namespace NZ.RdpMaid.App.Views
         public void AddLog(string message)
         {
             Logs.Add(new LogEntry(DateTimeOffset.Now.TimeOfDay, message));
+        }
+
+        public void AddLogIfNotEmpty(string? message)
+        {
+            if (!string.IsNullOrEmpty(message))
+            {
+                AddLog(message);
+            }
         }
     }
 }
