@@ -94,7 +94,7 @@ namespace NZ.RdpMaid.App.Core.Services.HttpClients
                 return new CheckResponse(Status: CheckStatus.Failed, Error: $"Некорректный XML: {ex.Message}");
             }
 
-            if (!updates.Any())
+            if (updates.Count == 0)
             {
                 return new CheckResponse(Status: CheckStatus.UpToDate);
             }
