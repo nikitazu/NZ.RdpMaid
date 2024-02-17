@@ -11,18 +11,32 @@ internal static class StreamExtensions
         this Stream source,
         Stream target,
         IProgress<float> progress,
-        long contentLength,
+        long? contentLength,
         CancellationToken ct = default)
     {
         ArgumentNullException.ThrowIfNull(source, nameof(source));
         ArgumentNullException.ThrowIfNull(target, nameof(target));
         ArgumentNullException.ThrowIfNull(progress, nameof(progress));
 
-        if (contentLength <= 0)
+        if (contentLength is null || contentLength <= 0)
         {
-            throw new ArgumentOutOfRangeException(nameof(contentLength));
+            await source.CopyToAsync(target, ct);
+        }
+        else
+        {
+            await source.CopyWithProgressTrackingInternal(target, progress, contentLength.Value, ct);
         }
 
+        progress.Report(1.0F);
+    }
+
+    private static async Task CopyWithProgressTrackingInternal(
+        this Stream source,
+        Stream target,
+        IProgress<float> progress,
+        long contentLength,
+        CancellationToken ct = default)
+    {
         IProgress<long> relativeProgress = new Progress<long>(
             byteCount => progress.Report((float)byteCount / contentLength)
         );

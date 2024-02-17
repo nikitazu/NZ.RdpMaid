@@ -135,15 +135,7 @@ namespace NZ.RdpMaid.App.Core.Services.HttpClients
             using var downstream = await response.Content.ReadAsStreamAsync(ct);
             using var buffer = new MemoryStream();
 
-            if (!contentLength.HasValue || contentLength.Value == 0)
-            {
-                await downstream.CopyToAsync(buffer);
-                progress.Report(100);
-            }
-            else
-            {
-                await downstream.CopyWithProgressTracking(buffer, progress, contentLength.Value, ct);
-            }
+            await downstream.CopyWithProgressTracking(buffer, progress, contentLength, ct);
 
             return new DownloadResponse(DownloadStatus.Ok, buffer.ToArray());
         }
