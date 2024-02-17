@@ -72,44 +72,45 @@ internal class MainWindowViewModel : INotifyPropertyChanged
         Progress = 0.0F;
         StatusText = "Подготовка к обновлению";
         DetailedText = "Проверка окружения";
-        AddLog("Подготовка к обновлению");
-        AddLog("Проверка окружения");
+        await ResetFileLog(ct);
+        await AddLog("Подготовка к обновлению", ct);
+        await AddLog("Проверка окружения", ct);
 
         var env = UpdateEnvironmentReader.Read();
 
         if (string.IsNullOrEmpty(env.InstallDirPath))
         {
-            AddErrorLog("Не установлен путь к каталогу установки");
+            await AddErrorLog("Не установлен путь к каталогу установки", ct);
             return;
         }
 
-        AddLog($"Проверка каталога установки: {env.InstallDirPath}");
+        await AddLog($"Проверка каталога установки: {env.InstallDirPath}", ct);
 
         if (!Directory.Exists(env.InstallDirPath))
         {
-            AddErrorLog("Каталог установки не найден");
+            await AddErrorLog("Каталог установки не найден", ct);
             return;
         }
 
         if (string.IsNullOrEmpty(env.UpdateFilePath))
         {
-            AddErrorLog("Не установлен путь к файлу обновления");
+            await AddErrorLog("Не установлен путь к файлу обновления", ct);
             return;
         }
 
-        AddLog($"Проверка файла обновления: {env.UpdateFilePath}");
+        await AddLog($"Проверка файла обновления: {env.UpdateFilePath}", ct);
 
         if (!File.Exists(env.UpdateFilePath))
         {
-            AddErrorLog("Файл обновления не найден");
+            await AddErrorLog("Файл обновления не найден", ct);
             return;
         }
 
-        AddLog($"Проверка каталога данных пользователя: {env.UserDataDirPath}");
+        await AddLog($"Проверка каталога данных пользователя: {env.UserDataDirPath}", ct);
 
         if (!string.IsNullOrEmpty(env.UserDataDirPath) && !Directory.Exists(env.UserDataDirPath))
         {
-            AddErrorLog($"Каталог данных пользователя не найден");
+            await AddErrorLog($"Каталог данных пользователя не найден", ct);
             return;
         }
 
@@ -118,22 +119,31 @@ internal class MainWindowViewModel : INotifyPropertyChanged
 
         Progress = 0.1F;
         DetailedText = "Закрытие основного приложения";
-        AddLog("Закрытие основного приложения");
-        AddLog("Поиск процесса NZ.RdpMaid.App");
+        await AddLog("Закрытие основного приложения", ct);
+        await AddLog("Поиск процесса NZ.RdpMaid.App", ct);
 
         var processes = Process.GetProcessesByName("NZ.RdpMaid.App");
 
         foreach (var process in processes)
         {
-            AddLog($"Завершение процесса NZ.RdpMaid.App PID={process.Id}");
-            process.Kill(true);
+            await AddLog($"Завершение процесса NZ.RdpMaid.App PID={process.Id}", ct);
+
+            try
+            {
+                process.Kill(entireProcessTree: false);
+            }
+            catch (Exception ex)
+            {
+                await AddErrorLog($"Не удалось завершить процесс основного приложения PID={process.Id}", ct);
+                await AddErrorLog($"{ex.Message}", ct);
+            }
         }
 
         int delayMs = 1_000;
 
         while (!processes.All(p => p.HasExited))
         {
-            AddLog("Ожидание завершения процессов основного приложения");
+            await AddLog("Ожидание завершения процессов основного приложения", ct);
             await Task.Delay(delayMs, ct);
 
             if (delayMs < 16_000)
@@ -147,7 +157,7 @@ internal class MainWindowViewModel : INotifyPropertyChanged
 
         Progress = 0.2F;
         DetailedText = "Распаковка файла обновления";
-        AddLog("Распаковка файла обновления");
+        await AddLog("Распаковка файла обновления", ct);
 
         var tempPath = Path.GetTempPath();
         var tempUpdateBasePath = Path.Combine(tempPath, "NZ.RdpMaid.Update");
@@ -168,7 +178,7 @@ internal class MainWindowViewModel : INotifyPropertyChanged
 
         Progress = 0.3F;
         DetailedText = "Резервное копирование текущей версии";
-        AddLog("Резервное копирование текущей версии");
+        await AddLog("Резервное копирование текущей версии", ct);
 
         var currentDirPath = Path.GetDirectoryName(typeof(MainWindowViewModel).Assembly.Location)!;
         var currentDir = new DirectoryInfo(currentDirPath);
@@ -186,7 +196,7 @@ internal class MainWindowViewModel : INotifyPropertyChanged
 
         Progress = 0.35F;
         DetailedText = "Резервное копирование пользовательских данных";
-        AddLog("Резервное копирование пользовательских данных");
+        await AddLog("Резервное копирование пользовательских данных", ct);
 
         var userDataBackupFilePath = Path.Combine(tempUpdateBasePath, "NZ.RdpMaid.UserData.Backup.zip");
 
@@ -215,8 +225,8 @@ internal class MainWindowViewModel : INotifyPropertyChanged
         Progress = 0.4F;
         StatusText = "Установка";
         DetailedText = "Копирование файлов";
-        AddLog("Установка");
-        AddLog("Копирование файлов");
+        await AddLog("Установка", ct);
+        await AddLog("Копирование файлов", ct);
 
         await CopyDirectoryRecursive(
             source: new DirectoryInfo(tempUpdateContentPath),
@@ -229,7 +239,7 @@ internal class MainWindowViewModel : INotifyPropertyChanged
         Progress = 0.8F;
         StatusText = "Запуск основного приложения";
         DetailedText = "Запуск основного приложения";
-        AddLog("Запуск основного приложения");
+        await AddLog("Запуск основного приложения", ct);
 
         var mainExeFilePath = Path.Combine(env.InstallDirPath, "net8.0-windows7.0", "NZ.RdpMaid.App.exe");
 
@@ -239,49 +249,57 @@ internal class MainWindowViewModel : INotifyPropertyChanged
 
         Progress = 0.9F;
         StatusText = "Обновление прошло успешно";
-        AddLog("Обновление прошло успешно");
+        await AddLog("Обновление прошло успешно", ct);
 
         if (!mainExeProcess.HasExited)
         {
-            AddLog("Основное приложение успешно запущено");
+            await AddLog("Основное приложение успешно запущено", ct);
         }
 
         Progress = 1.0F;
-        AddLog("Выключение...");
+        await AddLog("Выключение...", ct);
 
         System.Windows.Application.Current.Shutdown();
     }
 
-    private void AddLog(string message)
+    private async Task ResetFileLog(CancellationToken ct)
     {
-        Logs.Add(new LogEntry(DateTime.Now.TimeOfDay, message));
+        await File.WriteAllTextAsync("update.log", string.Empty, ct);
     }
 
-    private void AddErrorLog(string message)
+    private async Task AddLog(string message, CancellationToken ct)
     {
-        Logs.Add(new LogEntry(DateTime.Now.TimeOfDay, $"[ОШИБКА] {message}"));
+        var entry = new LogEntry(DateTime.Now.TimeOfDay, message);
+        Logs.Add(entry);
+        await File.AppendAllTextAsync("update.log", $"[{entry.Time}] {entry.Message}\n", ct);
+    }
+
+    private async Task AddErrorLog(string message, CancellationToken ct)
+    {
+        await AddLog($"[ОШИБКА] {message}", ct);
     }
 
     private async Task CopyDirectoryRecursive(DirectoryInfo source, DirectoryInfo target, CancellationToken ct)
     {
-        AddLog($"Копирование {source.FullName}");
+        await AddLog($"Копирование {source.FullName} -> {target.FullName}", ct);
 
-        foreach (var file in source.GetFiles())
+        foreach (var sourceFile in source.GetFiles())
         {
-            AddLog($"Копирование {file.FullName}");
-            await Task.Run(() => file.CopyTo(Path.Combine(target.FullName, file.Name), true), ct);
+            var targetFileName = Path.Combine(target.FullName, sourceFile.Name);
+            await AddLog($"Копирование {sourceFile.FullName} -> {targetFileName}", ct);
+            await Task.Run(() => sourceFile.CopyTo(targetFileName, true), ct);
         }
 
-        foreach (var dir in target.GetDirectories())
+        foreach (var sourceSubDir in source.GetDirectories())
         {
-            var targetDir = new DirectoryInfo(Path.Combine(source.FullName, dir.Name));
+            var targetSubDir = new DirectoryInfo(Path.Combine(target.FullName, sourceSubDir.Name));
 
-            if (!targetDir.Exists)
+            if (!targetSubDir.Exists)
             {
-                targetDir.Create();
+                targetSubDir.Create();
             }
 
-            await CopyDirectoryRecursive(dir, targetDir, ct);
+            await CopyDirectoryRecursive(sourceSubDir, targetSubDir, ct);
         }
     }
 }
