@@ -94,21 +94,7 @@ namespace NZ.RdpMaid.App.EventModel.Updates
 
             try
             {
-                var tempPath = Path.GetTempPath();
-                var tempUpdaterCopyPath = Path.Combine(tempPath, "NZ.RdpMaid.UpdaterCopy");
-                var tempUpdaterCopyDir = new DirectoryInfo(tempUpdaterCopyPath);
-
-                if (!tempUpdaterCopyDir.Exists)
-                {
-                    tempUpdaterCopyDir.Create();
-                }
-
-                File.Copy(Path.Combine("__updater", "NZ.RdpMaid.Updater.exe"), Path.Combine(tempUpdaterCopyPath, "NZ.RdpMaid.Updater.exe"), overwrite: true);
-                File.Copy(Path.Combine("__updater", "NZ.RdpMaid.Updater.dll"), Path.Combine(tempUpdaterCopyPath, "NZ.RdpMaid.Updater.dll"), overwrite: true);
-                File.Copy(Path.Combine("__updater", "NZ.RdpMaid.Updater.runtimeconfig.json"), Path.Combine(tempUpdaterCopyPath, "NZ.RdpMaid.Updater.runtimeconfig.json"), overwrite: true);
-
-                var updaterExePath = Path.Combine(tempUpdaterCopyPath, "NZ.RdpMaid.Updater.exe");
-
+                var updaterExePath = CopyUpdaterExecutableToTempDirectory();
                 ok = await _shell.RunUpdater(updaterExePath, env);
             }
             catch (Exception ex)
@@ -120,6 +106,32 @@ namespace NZ.RdpMaid.App.EventModel.Updates
             {
                 _model.AddLog("Не удалось запустить процесс установки :(");
             }
+        }
+
+        private static string CopyUpdaterExecutableToTempDirectory()
+        {
+            var tempPath = Path.GetTempPath();
+            var tempUpdaterCopyPath = Path.Combine(tempPath, "NZ.RdpMaid.UpdaterCopy");
+            var tempUpdaterCopyDir = new DirectoryInfo(tempUpdaterCopyPath);
+
+            if (!tempUpdaterCopyDir.Exists)
+            {
+                tempUpdaterCopyDir.Create();
+            }
+
+            var sourceExe = Path.Combine("__updater", "NZ.RdpMaid.Updater.exe");
+            var sourceDll = Path.Combine("__updater", "NZ.RdpMaid.Updater.dll");
+            var sourceJson = Path.Combine("__updater", "NZ.RdpMaid.Updater.runtimeconfig.json");
+
+            var targetExe = Path.Combine(tempUpdaterCopyPath, "NZ.RdpMaid.Updater.exe");
+            var targetDll = Path.Combine(tempUpdaterCopyPath, "NZ.RdpMaid.Updater.dll");
+            var targetJson = Path.Combine(tempUpdaterCopyPath, "NZ.RdpMaid.Updater.runtimeconfig.json");
+
+            File.Copy(sourceExe, targetExe, overwrite: true);
+            File.Copy(sourceDll, targetDll, overwrite: true);
+            File.Copy(sourceJson, targetJson, overwrite: true);
+
+            return targetExe;
         }
     }
 }
