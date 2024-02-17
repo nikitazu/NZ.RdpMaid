@@ -55,7 +55,9 @@
                     <TextBlock Grid.Column="0" Grid.Row="4" Text="Автор" />
                     <TextBlock Grid.Column="1" Grid.Row="4" Text="{Binding PendingUpdate.Author}" />
                     <TextBlock Grid.Column="0" Grid.Row="5" Text="Описание" />
-                    <TextBlock Grid.Column="1" Grid.Row="5" Text="{Binding PendingUpdate.Content}" />
+                    <ScrollViewer Grid.Column="1" Grid.Row="5" MaxHeight="100">
+                        <TextBlock Text="{Binding PendingUpdate.Content}" />
+                    </ScrollViewer>
                 </Grid>
                 <ItemsControl Grid.Row="2" ItemsSource="{Binding Logs}">
                     <ItemsControl.ItemTemplate>
