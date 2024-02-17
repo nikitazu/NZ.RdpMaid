@@ -22,7 +22,6 @@ namespace NZ.RdpMaid.App.Core.Services.HttpClients
 
         public record CheckResponse(
             CheckStatus Status,
-            string? DownloadUrl = null,
             UpdateModel? FoundUpdate = null,
             string? Error = null
         );
@@ -95,14 +94,7 @@ namespace NZ.RdpMaid.App.Core.Services.HttpClients
                 );
             }
 
-            var version = latestUpdate.Version;
-            var versionString = $"{version.Major}.{version.Minor}.{version.Build}";
-            var downloadUrl = $"https://github.com/nikitazu/NZ.RdpMaid/releases/download/{versionString}/NZ.RdpMaid.App-v{versionString}.zip";
-
-            return new CheckResponse(
-                Status: CheckStatus.UpdateFound,
-                DownloadUrl: downloadUrl,
-                FoundUpdate: latestUpdate);
+            return new CheckResponse(Status: CheckStatus.UpdateFound, FoundUpdate: latestUpdate);
         }
 
         public async Task<byte[]> DownloadUpdate(UpdateModel update, CancellationToken ct = default)
