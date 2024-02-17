@@ -6,7 +6,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml.Linq;
+using NZ.RdpMaid.App.Core.Utils;
 using NZ.RdpMaid.App.SerializationModels.AtomRss;
 
 namespace NZ.RdpMaid.App.Core.Services.HttpClients
@@ -51,28 +51,22 @@ namespace NZ.RdpMaid.App.Core.Services.HttpClients
                 return new CheckResponse(Status: CheckStatus.Failed, Error: "Пустой ответ");
             }
 
-            XDocument xml;
-
-            try
+            if (!XDocumentUtil.TryParse(content, out var xml))
             {
-                xml = XDocument.Parse(content);
-            }
-            catch (Exception ex)
-            {
-                return new CheckResponse(Status: CheckStatus.Failed, Error: $"Не удалось разобрать ответ: {ex.Message}");
+                return new CheckResponse(Status: CheckStatus.Failed, Error: "Не удалось разобрать XML ответ");
             }
 
             if (xml.Root is null)
             {
-                return new CheckResponse(Status: CheckStatus.Failed, Error: $"В ответе пустой XML");
+                return new CheckResponse(Status: CheckStatus.Failed, Error: "В ответе пустой XML");
             }
 
             List<UpdateModel>? updates = null;
 
             try
             {
-                updates = xml.Root.Elements(Schema.Entry)
-                    .Select(ParseUpdateEntry)
+                updates = AtomRssParser.ParseFeed(xml.Root)
+                    .Select(UpdateModelFactory.CreateFromAtomRss)
                     .OrderByDescending(entry => entry.Version)
                     .ToList();
             }
@@ -127,40 +121,6 @@ namespace NZ.RdpMaid.App.Core.Services.HttpClients
             var data = await response.Content.ReadAsByteArrayAsync(ct);
 
             return data;
-        }
-
-        private static UpdateModel ParseUpdateEntry(XElement xentry)
-        {
-            var xupdated = xentry.Element(Schema.Updated) ?? throw new FormatException("Отсутствует элемент <updated>");
-            var xlink = xentry.Element(Schema.Link) ?? throw new FormatException("Отсутствует элемент <link>");
-            var xtitle = xentry.Element(Schema.Title) ?? throw new FormatException("Отсутствует элемент <title>");
-            var xauthor = xentry.Element(Schema.Author) ?? throw new FormatException("Отсутствует элемент <author>");
-            var xcontent = xentry.Element(Schema.Content) ?? throw new FormatException("Отсутствует элемент <content>");
-
-            var updated = DateTimeOffset.Parse(xupdated.Value);
-            var link = xlink.Attribute("href")?.Value ?? string.Empty;
-            var title = xtitle.Value ?? throw new FormatException("Элемент <title> пуст");
-            var author = xauthor.Value ?? throw new FormatException("Элемент <author> пуст");
-            var content = xcontent.Value ?? string.Empty;
-
-            content = content
-                .Replace("<h2>", string.Empty)
-                .Replace("</h2>", string.Empty)
-                .Replace("<h3>", string.Empty)
-                .Replace("</h3>", string.Empty)
-                .Replace("<ul>", string.Empty)
-                .Replace("</ul>", string.Empty)
-                .Replace("<li>", string.Empty)
-                .Replace("</li>", string.Empty);
-
-            var version = Version.Parse(title);
-
-            return new UpdateModel(
-                Updated: updated,
-                Link: link,
-                Version: version,
-                Content: content,
-                Author: author);
         }
     }
 }
