@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using NZ.RdpMaid.App.Core.Utils;
+using NZ.RdpMaid.App.Extensions.Streaming;
 using NZ.RdpMaid.App.Extensions.Versioning;
 using NZ.RdpMaid.App.SerializationModels.AtomRss;
 
@@ -141,20 +142,7 @@ namespace NZ.RdpMaid.App.Core.Services.HttpClients
             }
             else
             {
-                var relativeProgress = new Progress<long>(
-                    byteCount => progress.Report((float)byteCount / contentLength.Value)
-                );
-
-                var buf = new byte[2048];
-                long totalBytesRead = 0;
-                int bytesRead;
-
-                while ((bytesRead = await downstream.ReadAsync(buf, ct)) != 0)
-                {
-                    await buffer.WriteAsync(buf.AsMemory(0, bytesRead), ct);
-                    totalBytesRead += bytesRead;
-                    ((IProgress<long>)relativeProgress).Report(totalBytesRead);
-                }
+                await downstream.CopyWithProgressTracking(buffer, progress, contentLength.Value, ct);
             }
 
             return new DownloadResponse(DownloadStatus.Ok, buffer.ToArray());

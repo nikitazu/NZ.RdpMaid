@@ -23,6 +23,8 @@ namespace NZ.RdpMaid.App.EventModel.Updates
         private readonly FileStorage _fileStorage = fileStorage ?? throw new ArgumentNullException(nameof(fileStorage));
         private readonly ShellProvider _shell = shell ?? throw new ArgumentNullException(nameof(shell));
 
+        private readonly Progress<float> _progress = new();
+
         public async Task Handle(DownloadUpdateEventModel notification, CancellationToken ct)
         {
             if (_model.CurrentStatus != UpdateViewModel.Status.WaitingForDownloadOrder)
@@ -39,15 +41,10 @@ namespace NZ.RdpMaid.App.EventModel.Updates
             _model.CurrentStatus = UpdateViewModel.Status.Downloading;
             _model.AddLog($"Качаю обновление: {_model.PendingUpdate!.Version}");
 
-            var progress = new Progress<float>();
-            progress.ProgressChanged += (_, value) =>
-            {
-                _model.DownloadProgressValue = (int)(value * 100);
-            };
-
-            _model.DownloadProgressValue = 0;
-            var response = await _updateClient.DownloadUpdate(_model.PendingUpdate, progress, ct);
-            _model.DownloadProgressValue = 100;
+            _model.DownloadProgressValue = 0.0F;
+            _progress.ProgressChanged += (_, value) => _model.DownloadProgressValue = value;
+            var response = await _updateClient.DownloadUpdate(_model.PendingUpdate, _progress, ct);
+            _model.DownloadProgressValue = 1.0F;
 
             if (response.Status == GithubUpdateClient.DownloadStatus.Failed)
             {

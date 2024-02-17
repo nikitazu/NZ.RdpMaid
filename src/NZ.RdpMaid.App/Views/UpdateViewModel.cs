@@ -51,7 +51,7 @@ namespace NZ.RdpMaid.App.Views
         private ObservableCollection<LogEntry> _logs = [];
         private Status _currentStatus = Status.None;
         private UpdateModel? _pendingUpdate = null;
-        private int _downloadProgressValue;
+        private float _downloadProgressValue;
 
         // Свойства
         //
@@ -113,7 +113,7 @@ namespace NZ.RdpMaid.App.Views
             }
         }
 
-        public int DownloadProgressValue
+        public float DownloadProgressValue
         {
             get => _downloadProgressValue;
             set
