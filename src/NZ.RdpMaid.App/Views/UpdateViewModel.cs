@@ -37,6 +37,7 @@ namespace NZ.RdpMaid.App.Views
             public static readonly PropertyChangedEventArgs PendingUpdate = new(nameof(PendingUpdate));
             public static readonly PropertyChangedEventArgs DownloadSectionVisibility = new(nameof(DownloadSectionVisibility));
             public static readonly PropertyChangedEventArgs IsDownloadButtonEnabled = new(nameof(IsDownloadButtonEnabled));
+            public static readonly PropertyChangedEventArgs DownloadProgressValue = new(nameof(DownloadProgressValue));
         }
 
         // Зависимости
@@ -50,6 +51,7 @@ namespace NZ.RdpMaid.App.Views
         private ObservableCollection<LogEntry> _logs = [];
         private Status _currentStatus = Status.None;
         private UpdateModel? _pendingUpdate = null;
+        private int _downloadProgressValue;
 
         // Свойства
         //
@@ -108,6 +110,16 @@ namespace NZ.RdpMaid.App.Views
             {
                 _pendingUpdate = value;
                 PropertyChanged?.Invoke(this, PropArgs.PendingUpdate);
+            }
+        }
+
+        public int DownloadProgressValue
+        {
+            get => _downloadProgressValue;
+            set
+            {
+                _downloadProgressValue = value;
+                PropertyChanged?.Invoke(this, PropArgs.DownloadProgressValue);
             }
         }
 

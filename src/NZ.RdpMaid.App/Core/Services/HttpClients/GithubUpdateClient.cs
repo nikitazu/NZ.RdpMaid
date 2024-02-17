@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
@@ -115,19 +116,48 @@ namespace NZ.RdpMaid.App.Core.Services.HttpClients
             return new CheckResponse(Status: CheckStatus.UpdateFound, FoundUpdate: latestUpdate);
         }
 
-        public async Task<DownloadResponse> DownloadUpdate(UpdateModel update, CancellationToken ct = default)
+        public async Task<DownloadResponse> DownloadUpdate(
+            UpdateModel update,
+            IProgress<float> progress,
+            CancellationToken ct = default)
         {
             var downloadUrl = MakeDownloadUrl(update.Version.ToXyzString());
-            var response = await _client.GetAsync(downloadUrl, ct);
+            var response = await _client.GetAsync(downloadUrl, HttpCompletionOption.ResponseHeadersRead, ct);
 
             if (!response.IsSuccessStatusCode)
             {
                 return new DownloadResponse(DownloadStatus.Failed, Data: [], Error: $"Ошибка загрузки: {response.StatusCode}");
             }
 
-            var data = await response.Content.ReadAsByteArrayAsync(ct);
+            var contentLength = response.Content.Headers.ContentLength;
 
-            return new DownloadResponse(DownloadStatus.Ok, data);
+            using var downstream = await response.Content.ReadAsStreamAsync(ct);
+            using var buffer = new MemoryStream();
+
+            if (!contentLength.HasValue || contentLength.Value == 0)
+            {
+                await downstream.CopyToAsync(buffer);
+                progress.Report(100);
+            }
+            else
+            {
+                var relativeProgress = new Progress<long>(
+                    byteCount => progress.Report((float)byteCount / contentLength.Value)
+                );
+
+                var buf = new byte[2048];
+                long totalBytesRead = 0;
+                int bytesRead;
+
+                while ((bytesRead = await downstream.ReadAsync(buf, ct)) != 0)
+                {
+                    await buffer.WriteAsync(buf.AsMemory(0, bytesRead), ct);
+                    totalBytesRead += bytesRead;
+                    ((IProgress<long>)relativeProgress).Report(totalBytesRead);
+                }
+            }
+
+            return new DownloadResponse(DownloadStatus.Ok, buffer.ToArray());
         }
 
         private static string MakeDownloadUrl(string version) =>

@@ -39,7 +39,15 @@ namespace NZ.RdpMaid.App.EventModel.Updates
             _model.CurrentStatus = UpdateViewModel.Status.Downloading;
             _model.AddLog($"Качаю обновление: {_model.PendingUpdate!.Version}");
 
-            var response = await _updateClient.DownloadUpdate(_model.PendingUpdate, ct);
+            var progress = new Progress<float>();
+            progress.ProgressChanged += (_, value) =>
+            {
+                _model.DownloadProgressValue = (int)(value * 100);
+            };
+
+            _model.DownloadProgressValue = 0;
+            var response = await _updateClient.DownloadUpdate(_model.PendingUpdate, progress, ct);
+            _model.DownloadProgressValue = 100;
 
             if (response.Status == GithubUpdateClient.DownloadStatus.Failed)
             {
