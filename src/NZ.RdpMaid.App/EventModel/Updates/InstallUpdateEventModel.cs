@@ -94,7 +94,11 @@ namespace NZ.RdpMaid.App.EventModel.Updates
 
             try
             {
-                ok = await _shell.RunUpdater(env);
+                // ДЕЛА перед запуском нужно скопировать updater во временный каталог
+                // ДЕЛА запустить нужно не сам updater а его копию из временного каталога
+
+                var updaterPath = Path.Combine("__updater", "NZ.RdpMaid.Updater.exe");
+                ok = await _shell.RunUpdater(updaterPath, env);
             }
             catch (Exception ex)
             {

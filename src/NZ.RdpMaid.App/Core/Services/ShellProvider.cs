@@ -22,9 +22,8 @@ internal class ShellProvider
         }
     }
 
-    public async Task<bool> RunUpdater((string, string)[]? env)
+    public async Task<bool> RunUpdater(string updaterPath, (string, string)[]? env)
     {
-        var updaterPath = Path.Combine("__updater", "NZ.RdpMaid.Updater.exe");
         var start = new ProcessStartInfo
         {
             FileName = updaterPath,
