@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using NZ.RdpMaid.App.Core.Utils;
 using NZ.RdpMaid.App.Extensions.Versioning;
+using NZ.RdpMaid.App.SerializationModels.AtomRss;
 
 namespace NZ.RdpMaid.App.Core.Services.HttpClients
 {
@@ -48,10 +49,9 @@ namespace NZ.RdpMaid.App.Core.Services.HttpClients
 
         public async Task<CheckResponse> CheckForUpdates(Version current, CancellationToken ct = default)
         {
-            string content;
+            var content = ExampleData.Feed;
 
 #if GITHUB_UPDATE_TEST_MODE__ON
-            content = ExampleData.Feed;
             await Task.Delay(TimeSpan.FromSeconds(1), ct);
 #else
             var response = await _client.GetAsync(Urls.ReleaseFeed, ct);
