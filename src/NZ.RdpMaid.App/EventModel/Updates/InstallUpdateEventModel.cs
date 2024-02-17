@@ -94,11 +94,22 @@ namespace NZ.RdpMaid.App.EventModel.Updates
 
             try
             {
-                // ДЕЛА перед запуском нужно скопировать updater во временный каталог
-                // ДЕЛА запустить нужно не сам updater а его копию из временного каталога
+                var tempPath = Path.GetTempPath();
+                var tempUpdaterCopyPath = Path.Combine(tempPath, "NZ.RdpMaid.UpdaterCopy");
+                var tempUpdaterCopyDir = new DirectoryInfo(tempUpdaterCopyPath);
 
-                var updaterPath = Path.Combine("__updater", "NZ.RdpMaid.Updater.exe");
-                ok = await _shell.RunUpdater(updaterPath, env);
+                if (!tempUpdaterCopyDir.Exists)
+                {
+                    tempUpdaterCopyDir.Create();
+                }
+
+                File.Copy(Path.Combine("__updater", "NZ.RdpMaid.Updater.exe"), Path.Combine(tempUpdaterCopyPath, "NZ.RdpMaid.Updater.exe"), overwrite: true);
+                File.Copy(Path.Combine("__updater", "NZ.RdpMaid.Updater.dll"), Path.Combine(tempUpdaterCopyPath, "NZ.RdpMaid.Updater.dll"), overwrite: true);
+                File.Copy(Path.Combine("__updater", "NZ.RdpMaid.Updater.runtimeconfig.json"), Path.Combine(tempUpdaterCopyPath, "NZ.RdpMaid.Updater.runtimeconfig.json"), overwrite: true);
+
+                var updaterExePath = Path.Combine(tempUpdaterCopyPath, "NZ.RdpMaid.Updater.exe");
+
+                ok = await _shell.RunUpdater(updaterExePath, env);
             }
             catch (Exception ex)
             {
