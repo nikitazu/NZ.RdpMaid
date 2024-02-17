@@ -42,11 +42,7 @@ namespace NZ.RdpMaid.App.EventModel.Updates
 
             if (response.Status == GithubUpdateClient.DownloadStatus.Failed)
             {
-                if (!string.IsNullOrEmpty(response.Error))
-                {
-                    _model.AddLog(response.Error);
-                }
-
+                _model.AddLogIfNotEmpty(response.Error);
                 _model.AddLog($"Не удалось скачать обновление, попробуйте ещё раз");
                 _model.CurrentStatus = UpdateViewModel.Status.WaitingForDownloadOrder;
 

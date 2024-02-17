@@ -123,5 +123,13 @@ namespace NZ.RdpMaid.App.Views
         {
             Logs.Add(new LogEntry(DateTimeOffset.Now.TimeOfDay, message));
         }
+
+        public void AddLogIfNotEmpty(string? message)
+        {
+            if (!string.IsNullOrEmpty(message))
+            {
+                AddLog(message);
+            }
+        }
     }
 }
