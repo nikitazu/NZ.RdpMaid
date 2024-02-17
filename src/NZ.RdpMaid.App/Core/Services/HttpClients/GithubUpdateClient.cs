@@ -7,12 +7,18 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using NZ.RdpMaid.App.Core.Utils;
-using NZ.RdpMaid.App.SerializationModels.AtomRss;
+using NZ.RdpMaid.App.Extensions.Versioning;
 
 namespace NZ.RdpMaid.App.Core.Services.HttpClients
 {
     internal class GithubUpdateClient(HttpClient client)
     {
+        public static class Urls
+        {
+            public const string ReleaseFeed = "https://github.com/nikitazu/NZ.RdpMaid/releases.atom";
+            public const string ReleaseDownload = "https://github.com/nikitazu/NZ.RdpMaid/releases/download/";
+        }
+
         public enum CheckStatus
         {
             UpToDate,
@@ -26,6 +32,18 @@ namespace NZ.RdpMaid.App.Core.Services.HttpClients
             string? Error = null
         );
 
+        public enum DownloadStatus
+        {
+            Ok,
+            Failed,
+        }
+
+        public record DownloadResponse(
+            DownloadStatus Status,
+            byte[] Data,
+            string? Error = null
+        );
+
         private readonly HttpClient _client = client ?? throw new ArgumentNullException(nameof(client));
 
         public async Task<CheckResponse> CheckForUpdates(Version current, CancellationToken ct = default)
@@ -36,7 +54,7 @@ namespace NZ.RdpMaid.App.Core.Services.HttpClients
             content = ExampleData.Feed;
             await Task.Delay(TimeSpan.FromSeconds(1), ct);
 #else
-            var response = await _client.GetAsync("https://github.com/nikitazu/NZ.RdpMaid/releases.atom", ct);
+            var response = await _client.GetAsync(Urls.ReleaseFeed, ct);
             if (!response.IsSuccessStatusCode)
             {
                 return new CheckResponse(Status: CheckStatus.Failed, Error: $"Плохой ответ {response.StatusCode}");
@@ -97,22 +115,22 @@ namespace NZ.RdpMaid.App.Core.Services.HttpClients
             return new CheckResponse(Status: CheckStatus.UpdateFound, FoundUpdate: latestUpdate);
         }
 
-        public async Task<byte[]> DownloadUpdate(UpdateModel update, CancellationToken ct = default)
+        public async Task<DownloadResponse> DownloadUpdate(UpdateModel update, CancellationToken ct = default)
         {
-            var version = update.Version;
-            var versionString = $"{version.Major}.{version.Minor}.{version.Build}";
-            var downloadUrl = $"https://github.com/nikitazu/NZ.RdpMaid/releases/download/{versionString}/NZ.RdpMaid.App-v{versionString}.zip";
-
+            var downloadUrl = MakeDownloadUrl(update.Version.ToXyzString());
             var response = await _client.GetAsync(downloadUrl, ct);
 
             if (!response.IsSuccessStatusCode)
             {
-                throw new Exception("fuck");
+                return new DownloadResponse(DownloadStatus.Failed, Data: [], Error: $"Ошибка загрузки: {response.StatusCode}");
             }
 
             var data = await response.Content.ReadAsByteArrayAsync(ct);
 
-            return data;
+            return new DownloadResponse(DownloadStatus.Ok, data);
         }
+
+        private static string MakeDownloadUrl(string version) =>
+            $"{Urls.ReleaseDownload}{version}/NZ.RdpMaid.App-v{version}.zip";
     }
 }

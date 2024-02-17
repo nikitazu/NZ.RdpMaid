@@ -40,10 +40,23 @@ namespace NZ.RdpMaid.App.EventModel.Updates
 
             var response = await _updateClient.DownloadUpdate(_model.PendingUpdate, ct);
 
-            _model.AddLog($"Скачал {response.Length} байт");
+            if (response.Status == GithubUpdateClient.DownloadStatus.Failed)
+            {
+                if (!string.IsNullOrEmpty(response.Error))
+                {
+                    _model.AddLog(response.Error);
+                }
+
+                _model.AddLog($"Не удалось скачать обновление, попробуйте ещё раз");
+                _model.CurrentStatus = UpdateViewModel.Status.WaitingForDownloadOrder;
+
+                return;
+            }
+
+            _model.AddLog($"Скачал {response.Data.Length} байт");
 
             _fileStorage.EnsureDataDirectoryExists();
-            await _fileStorage.CreateBinaryFileAsync("update.zip", response, ct);
+            await _fileStorage.CreateBinaryFileAsync("update.zip", response.Data, ct);
 
             var path = _fileStorage.ResolveFilePath("update.zip");
 
