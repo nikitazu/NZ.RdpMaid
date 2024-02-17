@@ -43,14 +43,14 @@
             <TextBlock Grid.Column="1" Grid.Row="2" Text="{Binding PendingUpdate.Updated}" />
             <TextBlock Grid.Column="0" Grid.Row="3" Text="Ссылка" />
             <TextBlock Grid.Column="1" Grid.Row="3">
-                        <Hyperlink
-                            NavigateUri="{Binding PendingUpdate.Link}"
-                            Command="{StaticResource OpenLinkInBrowserCommand}"
-                            CommandParameter="{Binding PendingUpdate.Link}"
-                        >
-                            <TextBlock Text="{Binding PendingUpdate.Link}" />
-                        </Hyperlink>
-                    </TextBlock>
+                <Hyperlink
+                    NavigateUri="{Binding PendingUpdate.Link}"
+                    Command="{StaticResource OpenLinkInBrowserCommand}"
+                    CommandParameter="{Binding PendingUpdate.Link}"
+                >
+                    <TextBlock Text="{Binding PendingUpdate.Link}" />
+                </Hyperlink>
+            </TextBlock>
             <TextBlock Grid.Column="0" Grid.Row="4" Text="Автор" />
             <TextBlock Grid.Column="1" Grid.Row="4" Text="{Binding PendingUpdate.Author}" />
             <TextBlock Grid.Column="0" Grid.Row="5" Text="Описание" />
@@ -70,13 +70,13 @@
         </ItemsControl>
         <StackPanel Grid.Row="3" Visibility="{Binding DownloadSectionVisibility}">
             <Button
-                        Content="Скачать обновление"
-                        Style="{StaticResource Theme.Style.Button.Dialog}"
-                        MaxWidth="250"
-                        Command="{StaticResource PublishCommand}"
-                        CommandParameter="{StaticResource EventModels.Updates.DownloadUpdateEventModel}"
-                        IsEnabled="{Binding IsDownloadButtonEnabled}"
-                    />
+                Content="Скачать обновление"
+                Style="{StaticResource Theme.Style.Button.Dialog}"
+                MaxWidth="250"
+                Command="{StaticResource PublishCommand}"
+                CommandParameter="{StaticResource EventModels.Updates.DownloadUpdateEventModel}"
+                IsEnabled="{Binding IsDownloadButtonEnabled}"
+            />
         </StackPanel>
     </Grid>
 </UserControl>
