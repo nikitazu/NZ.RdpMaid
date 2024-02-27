@@ -7,7 +7,7 @@
     <UseWPF>true</UseWPF>
     <ApplicationIcon>Resources\Images\AppIcon-PinkLoli.ico</ApplicationIcon>
     <Title>NZ.RdpMaid</Title>
-    <Version>0.7.4</Version>
+    <Version>0.7.5</Version>
   </PropertyGroup>
 
   <ItemGroup>
