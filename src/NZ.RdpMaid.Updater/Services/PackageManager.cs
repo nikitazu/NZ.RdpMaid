@@ -34,10 +34,16 @@ internal static class PackageManager
         ZipFile.CreateFromDirectory(currentDir.FullName, outputFilePath);
     }
 
-    public static async Task BackupUserDataDirectory(string userDataDirPath, string outputFilePath, CancellationToken ct)
+    public static async Task BackupUserDataDirectory(
+        string userDataDirPath,
+        string outputFilePath,
+        string[] excludeFileNames,
+        CancellationToken ct
+    )
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(userDataDirPath, nameof(userDataDirPath));
         ArgumentException.ThrowIfNullOrWhiteSpace(outputFilePath, nameof(outputFilePath));
+        ArgumentNullException.ThrowIfNull(excludeFileNames, nameof(excludeFileNames));
 
         if (File.Exists(outputFilePath))
         {
@@ -48,7 +54,7 @@ internal static class PackageManager
 
         foreach (var file in new DirectoryInfo(userDataDirPath).GetFiles())
         {
-            if (file.Name != "update.zip")
+            if (!excludeFileNames.Contains(file.Name))
             {
                 var entry = archive.CreateEntry(file.Name);
                 using var entryStream = entry.Open();

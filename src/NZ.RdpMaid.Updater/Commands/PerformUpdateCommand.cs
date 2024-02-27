@@ -128,7 +128,11 @@ internal static class PerformUpdateCommand
         model.Progress = 0.35F;
         model.DetailedText = "Резервное копирование пользовательских данных";
         await model.AddLog("Резервное копирование пользовательских данных", ct);
-        await PackageManager.BackupUserDataDirectory(env.UserDataDirPath, outputFilePath: userDataBackupFilePath, ct);
+        await PackageManager.BackupUserDataDirectory(
+            userDataDirPath: env.UserDataDirPath,
+            outputFilePath: userDataBackupFilePath,
+            excludeFileNames: [new FileInfo(env.UpdateFilePath).Name],
+            ct: ct);
 
         // Установка
         //
