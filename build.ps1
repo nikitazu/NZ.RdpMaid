@@ -11,6 +11,7 @@ Param (
 #
 
 $AppName = "NZ.RdpMaid.App"
+$UpdaterAppName = "NZ.RdpMaid.Updater"
 $SolutionPath = "./src/NZ.RdpMaid.sln"
 $ProjectPath = "./src/NZ.RdpMaid.App/NZ.RdpMaid.App.csproj"
 $PublishPath = "./publish"
@@ -44,6 +45,7 @@ if ($Publish)
 
     Write-Host "[Copy publish files]"
     Copy-Item "./src/$AppName/bin/Debug" $PublishCurrentPath -Recurse
+    Copy-Item "./src/$UpdaterAppName/bin/Debug/net8.0-windows/*" "$PublishCurrentPath/net8.0-windows7.0/__updater" -Recurse
     Copy-Item "./README.md" $PublishCurrentPath
     Copy-Item "./CHANGELOG.md" $PublishCurrentPath
     Copy-Item "./doc/*.*" $PublishCurrentPath
