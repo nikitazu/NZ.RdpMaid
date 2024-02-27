@@ -34,6 +34,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <TextBlock Grid.Column="0" Grid.Row="0" Text="Текущая версия" />
             <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding CurrentVersion}" />
@@ -58,16 +59,18 @@
                 <TextBlock Text="{Binding PendingUpdate.Content}" />
             </ScrollViewer>
         </Grid>
-        <ItemsControl Grid.Row="2" ItemsSource="{Binding Logs}">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,4" >
-                        <TextBlock Text="{Binding Time}" FontFamily="Consolas" Margin="0,0,8,0" />
-                        <TextBlock Text="{Binding Message}" FontFamily="Consolas" Margin="0" />
-                    </StackPanel>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
+        <ScrollViewer Grid.Row="2" MaxHeight="200">
+            <ItemsControl ItemsSource="{Binding Logs}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,4" >
+                            <TextBlock Text="{Binding Time}" FontFamily="Consolas" Margin="0,0,8,0" />
+                            <TextBlock Text="{Binding Message}" FontFamily="Consolas" Margin="0" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
         <StackPanel Grid.Row="3" Visibility="{Binding DownloadSectionVisibility}">
             <Button
                 Content="Скачать обновление"
@@ -78,6 +81,16 @@
                 IsEnabled="{Binding IsDownloadButtonEnabled}"
             />
             <ProgressBar Minimum="0" Maximum="1" Value="{Binding DownloadProgressValue}" />
+        </StackPanel>
+        <StackPanel Grid.Row="4" Visibility="{Binding InstallSectionVisibility}">
+            <Button
+                Content="Установить обновление"
+                Style="{StaticResource Theme.Style.Button.Dialog}"
+                MaxWidth="250"
+                Command="{StaticResource PublishCommand}"
+                CommandParameter="{StaticResource EventModels.Updates.InstallUpdateEventModel}"
+                IsEnabled="{Binding IsInstallButtonEnabled}"
+            />
         </StackPanel>
     </Grid>
 </UserControl>

@@ -19,7 +19,6 @@ namespace NZ.RdpMaid.App.Views
             CheckingForUpdate,
             WaitingForDownloadOrder,
             Downloading,
-            Unpacking,
             WaitingForInstallOrder,
             Installing,
             Updated,
@@ -38,6 +37,8 @@ namespace NZ.RdpMaid.App.Views
             public static readonly PropertyChangedEventArgs DownloadSectionVisibility = new(nameof(DownloadSectionVisibility));
             public static readonly PropertyChangedEventArgs IsDownloadButtonEnabled = new(nameof(IsDownloadButtonEnabled));
             public static readonly PropertyChangedEventArgs DownloadProgressValue = new(nameof(DownloadProgressValue));
+            public static readonly PropertyChangedEventArgs InstallSectionVisibility = new(nameof(InstallSectionVisibility));
+            public static readonly PropertyChangedEventArgs IsInstallButtonEnabled = new(nameof(IsInstallButtonEnabled));
         }
 
         // Зависимости
@@ -78,6 +79,8 @@ namespace NZ.RdpMaid.App.Views
                 PropertyChanged?.Invoke(this, PropArgs.CurrentStatusText);
                 PropertyChanged?.Invoke(this, PropArgs.DownloadSectionVisibility);
                 PropertyChanged?.Invoke(this, PropArgs.IsDownloadButtonEnabled);
+                PropertyChanged?.Invoke(this, PropArgs.InstallSectionVisibility);
+                PropertyChanged?.Invoke(this, PropArgs.IsInstallButtonEnabled);
             }
         }
 
@@ -87,7 +90,6 @@ namespace NZ.RdpMaid.App.Views
             Status.CheckingForUpdate => "Проверяю...",
             Status.WaitingForDownloadOrder => "Есть обнова, её можно скачать!",
             Status.Downloading => "Качаю...",
-            Status.Unpacking => "Распаковываю...",
             Status.WaitingForInstallOrder => "Обновление готово к установке!",
             Status.Installing => "Устанавливаю...",
             Status.Updated => "Текущая версия актуальна.",
@@ -102,6 +104,15 @@ namespace NZ.RdpMaid.App.Views
 
         public bool IsDownloadButtonEnabled =>
             CurrentStatus == Status.WaitingForDownloadOrder;
+
+        public Visibility InstallSectionVisibility =>
+            CurrentStatus == Status.WaitingForInstallOrder
+            || CurrentStatus == Status.Installing
+            ? Visibility.Visible
+            : Visibility.Collapsed;
+
+        public bool IsInstallButtonEnabled =>
+            CurrentStatus == Status.WaitingForInstallOrder;
 
         public UpdateModel? PendingUpdate
         {

@@ -190,7 +190,7 @@
                         <ContextMenu>
                             <MenuItem Header="Руководство пользователя (в разработке)" />
                             <MenuItem
-                                Header="Проверить наличие обновлений (в разработке)"
+                                Header="Проверить наличие обновлений"
                                 Command="{StaticResource PublishCommand}"
                                 CommandParameter="{StaticResource EventModels.Updates.OpenUpdateDialogEventModel}"
                             />

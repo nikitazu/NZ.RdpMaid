@@ -1,0 +1,46 @@
+﻿<Window
+    x:Class="NZ.RdpMaid.Updater.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:NZ.RdpMaid.Updater"
+    mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance Type=local:MainWindowViewModel}"
+    Title="NZ.RdpMaid.Updater"
+    Height="400"
+    Width="800"
+    WindowStartupLocation="CenterScreen"
+    FontSize="14"
+    Loaded="Window_Loaded"
+>
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Text="{Binding StatusText}" />
+        <TextBlock Grid.Row="1" Text="{Binding DetailedText}" />
+        <ScrollViewer Grid.Row="2" Margin="0,8,0,16">
+            <ItemsControl ItemsSource="{Binding Logs}" FontFamily="Consolas">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding Time, Converter={StaticResource Conv.Time}}" Margin="0,0,16,0" />
+                            <TextBlock Text="{Binding Message}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+        <ProgressBar
+            Grid.Row="3"
+            Height="16"
+            Minimum="0"
+            Maximum="1"
+            Value="{Binding Progress}"
+        />
+    </Grid>
+</Window>
